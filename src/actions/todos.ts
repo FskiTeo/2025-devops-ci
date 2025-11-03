@@ -51,9 +51,8 @@ export const toggleTodo = createServerFn()
     }
     const [updatedTodo] = await db
       .update(todos)
-      .set({ completed: !todo.completed })
-      .where(eq(todos.id, id))
-      .returning();
+      .set({ completed: !todo.completed }).where(eq(todos.id, id))
+      .returning()
     return updatedTodo;
   });
 
