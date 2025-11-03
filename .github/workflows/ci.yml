@@ -47,6 +47,6 @@ jobs:
       - name: Install dependencies (dev + prod)
         run: pnpm install --frozen-lockfile
       - name: Initialize Playwright browser
-        run: pnpm exec playwright install
+        run: pnpm exec playwright install --with-deps
       - name: Run e2e tests
         run: pnpm test:e2e
