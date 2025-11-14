@@ -72,6 +72,42 @@ jobs:
       - name: Check code format
         run: pnpm format:check
 
+  fix-format:
+    needs: check-format
+    if: failure() && (github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && github.event.issue.pull_request))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - name: Install dependencies (dev + prod)
+        run: pnpm install --frozen-lockfile
+      - name: Fix code format
+        run: pnpm format
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "No formatting changes needed."
+            exit 0
+          else
+            git add .
+            git commit -m "🤖: fixed code format after pull request [skip ci]"
+            git push
+          fi
+
   lint:
     if: github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && github.event.issue.pull_request)
     runs-on: ubuntu-latest
