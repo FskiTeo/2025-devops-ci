@@ -31,7 +31,7 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 });
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: { children: any }) {
   return (
     <html lang="en">
       <head>
