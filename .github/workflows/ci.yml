@@ -105,7 +105,7 @@ jobs:
           else
             git add .
             git commit -m "🤖: fixed code format after pull request [skip ci]"
-            git push
+            git push origin HEAD:${{ github.head_ref }}
           fi
 
   lint:
